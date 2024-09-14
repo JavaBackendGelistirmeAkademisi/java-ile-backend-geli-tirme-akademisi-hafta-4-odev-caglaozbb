@@ -48,6 +48,29 @@ public class FileManager {
             bw.write(data);
         }
     }
+    public void writeProductToFile(String filePath, Product product) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            String productData = "Product ID: " + product.getId() +
+                    "\nName: " + product.getName() +
+                    "\nPrice: " + product.getPrice() +
+                    "\nStock: " + product.getQuantity() +
+                    "\n";
+            bw.write(productData);
+            bw.newLine();
+        }
+    }
+    public String readProductsFromFile(String filePath) throws IOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        }
+        return content.toString();
+    }
+
+
 
     public void writeCustomerToFile(String filePath, Customer customer) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
@@ -60,6 +83,29 @@ public class FileManager {
     }
 
     public String readCustomersFromFile(String filePath) throws IOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        }
+        return content.toString();
+    }
+
+
+    public void writeOrderToFile(String filePath, Order order) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            String orderData = "Order ID: " + order.getOrderId() +
+                    "\nCustomer: " + order.getCustomer().getName() +
+                    "\nProducts: " + order.getProducts() +
+                    "\nTotal Price: " + order.getPrice() +
+                    "\n";
+            bw.write(orderData);
+        }
+    }
+
+    public String readOrdersFromFile(String filePath) throws IOException {
         StringBuilder content = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;

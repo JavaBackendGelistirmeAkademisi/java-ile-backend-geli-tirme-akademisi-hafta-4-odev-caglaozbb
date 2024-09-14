@@ -30,21 +30,33 @@ public class Main {
                 System.out.println(customersFilePath + " already exists.");
             }
 
+            Product apple = new Product(1, "Apple", 3.0, 10);
+            Product orange = new Product(2, "Orange", 5.0, 8);
+            Product banana = new Product(3, "Banana", 7.99, 5);
+
+
             Inventory inventory = new Inventory();
-            inventory.addProduct(new Product(1, "Apple", 3.0, 10));
-            inventory.addProduct(new Product(2, "Orange", 5.0, 8));
-            inventory.addProduct(new Product(3, "Banana", 7.99, 5));
+            inventory.addProduct(apple);
+            inventory.addProduct(orange);
+            inventory.addProduct(banana);
 
-            fileManager.writeToFile(productsFilePath, inventory.getProductById(1).toString());
-            fileManager.writeToFile(productsFilePath, inventory.getProductById(2).toString());
-            fileManager.writeToFile(productsFilePath, inventory.getProductById(3).toString());
 
+            fileManager.writeProductToFile(productsFilePath, inventory.getProductById(1));
+            fileManager.writeProductToFile(productsFilePath, inventory.getProductById(2));
+            fileManager.writeProductToFile(productsFilePath, inventory.getProductById(3));
+
+            try {
+                String productData = fileManager.readProductsFromFile(productsFilePath);
+                System.out.println(productData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             inventory.listAllProducts();
             inventory.updateStock(2, 10);
+            //yeni stokun product.txtye eklenmesi
+            fileManager.writeProductToFile(productsFilePath, inventory.getProductById(2));
             inventory.listAllProducts();
 
-            String productsData = fileManager.readFromFile(productsFilePath);
-            System.out.println(productsData);
 
             Customer customer = new Customer(1, "John", "Doe");
             Customer customer2 = new Customer(2, "Jane", "Doe");
@@ -54,26 +66,42 @@ public class Main {
             fileManager.writeCustomerToFile(customersFilePath, customer2);
             fileManager.writeCustomerToFile(customersFilePath, customer3);
 
-            String customersData = fileManager.readCustomersFromFile(customersFilePath);
-            System.out.println(customersData);
 
-            Order order = new Order(1, customer, inventory.getProductById(1), 3.0);
+            try {
+                String customersData = fileManager.readCustomersFromFile(customersFilePath);
+                System.out.println(customersData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            order.addProduct(inventory.getProductById(2));
-            order.addProduct(inventory.getProductById(3));
+            Order order1 = new Order(1, customer , inventory.getProductById(1), 0.0);
+            order1.addProduct(inventory.getProductById(1), 3);  // 3 adet Apple
+            order1.addProduct(inventory.getProductById(2), 2);  // 2 adet Orange
+            order1.addProduct(inventory.getProductById(3), 1);  // 1 adet Banana
+
+            fileManager.writeOrderToFile(ordersFilePath, order1);
+
+            Order order2 = new Order(2, customer2 , inventory.getProductById(1), 0.0);
+            order2.addProduct(inventory.getProductById(1), 6);  // 6 adet Apple
+            order2.addProduct(inventory.getProductById(3), 2);  // 2 adet Banana
+
+            fileManager.writeOrderToFile(ordersFilePath, order2);
+
+            try {
+                String ordersData = fileManager.readOrdersFromFile(ordersFilePath);
+               System.out.println(ordersData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
-            fileManager.writeToFile(ordersFilePath, order.toString());
-
-            String ordersData = fileManager.readFromFile(ordersFilePath);
-            System.out.println(ordersData);
-
-
-        } catch (CustomException e) {
-            throw new RuntimeException(e);
+//        } catch (CustomException e) {
+//            throw new RuntimeException(e);
         } catch (IOException e) {
             System.out.println("An IOException occurred: " + e.getMessage());
             e.printStackTrace();
+        } catch (CustomException e) {
+            throw new RuntimeException(e);
         }
     }
 }
